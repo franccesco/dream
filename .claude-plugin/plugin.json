@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "dream",
+  "displayName": "Dream",
+  "version": "0.1.0",
+  "description": "Periodically dream about your project: audit dependencies, language/runtime version, and coding practices against current authoritative sources, then propose evidence-backed, verified, human-reviewed changes. Nothing auto-merges. Ever.",
+  "author": {
+    "name": "Franccesco Orozco",
+    "email": "franccesco.orozco@icloud.com"
+  },
+  "homepage": "https://github.com/franccesco/dream",
+  "repository": "https://github.com/franccesco/dream",
+  "license": "MIT",
+  "keywords": [
+    "dependencies",
+    "maintenance",
+    "upgrades",
+    "changelog",
+    "audit",
+    "security"
+  ]
+}

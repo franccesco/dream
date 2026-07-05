@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "dream",
+  "owner": {
+    "name": "Franccesco Orozco",
+    "email": "franccesco.orozco@icloud.com"
+  },
+  "description": "Project dreaming for Claude Code: evidence-backed, verified, human-reviewed dependency and practice audits.",
+  "plugins": [
+    {
+      "name": "dream",
+      "source": "./",
+      "displayName": "Dream",
+      "description": "Audit dependencies, runtime versions, and coding practices against current authoritative sources; propose verified, reviewable PRs and issues. Nothing auto-merges.",
+      "category": "maintenance",
+      "tags": ["dependencies", "upgrades", "audit", "changelog", "security"]
+    }
+  ]
+}

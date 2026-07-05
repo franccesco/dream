@@ -1,0 +1,22 @@
+# Dream adapter: Go
+#
+# Copied into .claude/dream/adapters/ by /dream init. Edit freely — probe and
+# verify commands are project-tunable (e.g. add build tags, narrow test scope).
+# The schema is language-agnostic; new ecosystems are new files like this one.
+
+lang: go
+manifests: ["go.mod"]
+
+# Deterministic probes — run verbatim, zero LLM tokens.
+probe_outdated: "go list -u -m all"
+probe_vulns: "govulncheck ./..."   # if missing: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+# Language/runtime version gap.
+lang_version_source: "go directive in go.mod"
+lang_latest_source: "https://go.dev/dl/?mode=json"
+
+# Proof-ladder mechanics for the verifier.
+verify: "go build ./... && go test ./..."
+
+# Toolchain currency checks.
+toolchain_checks: ["gofmt -l .", "go vet ./..."]
