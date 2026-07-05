@@ -53,7 +53,7 @@ Inventory → deterministic probes → delta gate → research fan-out
   → verification (clean context) → ledger update → triage → umbrella report
 ```
 
-The research and verification stages use the bundled subagents (`dream:researcher`, `dream:verifier`). If a dynamic workflow / orchestration tool is available in your session, use it for the fan-out and verification stages; otherwise spawn the subagents directly, in parallel where independent.
+Research is the heart of a dream — knowing what changed in the ecosystem (language, libraries, standard library, tooling) requires actually reading what its owners published; probes and heuristics only decide *where* to aim it, never *whether* it happens. The research and verification stages use the bundled subagents (`dream:researcher`, `dream:verifier`), and the intended engine for them is a **dynamic workflow**: when the Workflow tool is available, author the fan-out as a workflow script — `${CLAUDE_PLUGIN_ROOT}/skills/dream/references/workflow.md` has the template (deterministic orchestration, schema-validated findings, pipelined verification, resumable runs). Fall back to direct parallel subagent calls only when no workflow tool exists.
 
 ## Project state layout
 

@@ -51,7 +51,11 @@ This gate is what keeps dreams cheap on healthy projects. Respect it — but kno
 
 ## 5. Research fan-out
 
-Spawn one `dream:researcher` subagent per target with a delta. Run them in parallel; if a dynamic workflow/orchestration tool is available, use it (agent type `dream:researcher`), otherwise parallel direct subagent calls. Each researcher gets a self-contained prompt containing:
+**Every dream researches — no exception.** Research is the fundamental act of dreaming: there is no knowing what changed in the ecosystem (the language, the libraries, the standard library, the tooling) without going out and reading what its owners published. The delta gate only prunes *changelog mining for individual dependencies that had no releases* (an empty version range has nothing to mine); it never cancels the research stage itself. The practices sweep and at least one researcher always run.
+
+**Orchestrate the fan-out with a dynamic workflow.** If the Workflow tool is available in your session, author the research + verification stages as a workflow script — `${CLAUDE_PLUGIN_ROOT}/skills/dream/references/workflow.md` has a ready template. Workflows are the right mechanism here, not an optimization: deterministic control flow for the fan-out, real parallelism, schema-validated researcher/verifier outputs, and resumability if a run dies mid-flight. Fall back to parallel `dream:researcher` subagent calls only when no workflow tool exists.
+
+Spawn one researcher per target with a delta (plus the practices sweep below). Each researcher gets a self-contained prompt containing:
 
 - The target: name, pinned version, latest in-scope version, the raw probe output for it.
 - The symbols this project imports from it (from `imports.yml`) and the files that import them.
@@ -74,7 +78,7 @@ Opportunity findings that a researcher discovers during depth expansion re-enter
 
 ## 6. Verification (clean context)
 
-Spawn one `dream:verifier` subagent per surviving finding — in parallel. **Clean context is the whole point**: give the verifier only the finding itself (claim, type, evidence URLs, affected files, proposed change if any) plus the adapter's `verify` command and the path to the repo. Never pass the researcher's reasoning, transcript, or enthusiasm. A verifier that reads the researcher's argument inherits the researcher's blind spots.
+Spawn one `dream:verifier` subagent per surviving finding — in parallel, ideally as the second stage of the same workflow (see `workflow.md`; a pipeline lets each target's findings start verifying while other targets are still researching). **Clean context is the whole point**: give the verifier only the finding itself (claim, type, evidence URLs, affected files, proposed change if any) plus the adapter's `verify` command and the path to the repo. Never pass the researcher's reasoning, transcript, or enthusiasm. A verifier that reads the researcher's argument inherits the researcher's blind spots.
 
 The verifier grades per its own instructions (confidence rubric + proof ladder) and returns: confidence, verdict (`verified` / `rejected` / `needs-issue`), notes, and — for opportunity findings — a patch it actually compiled and tested, plus any characterization test it had to write.
 

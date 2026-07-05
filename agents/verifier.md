@@ -31,7 +31,7 @@ Deterministic facts (a version delta, a CVE present) are facts, not claims — s
 
 ## Output
 
-Return a fenced YAML block and nothing else around it:
+Return a fenced YAML block and nothing else around it. (When you are spawned inside a dynamic workflow with an output schema, that schema wins — return the same fields as validated JSON instead.)
 
 ```yaml
 finding: "<the claim, echoed>"
