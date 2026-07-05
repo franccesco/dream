@@ -5,7 +5,7 @@ Execute the stages in order. Stages 4–5 (research, verification) are where sub
 ## 0. Preflight
 
 - Read `.claude/dream/config.yml`, `baseline.yml`, `runs.log`, and the findings ledger README.
-- **Scope**: `minor` unless this run is `/dream major`, in which case `major`.
+- **Scope**: `major` if this run was invoked as `/dream major`; otherwise the `scope` value from `config.yml` (`minor` if absent). A config `scope: major` is standing consent given at init — honor it exactly like `/dream major`.
 - **Dream ID**: `dream-YYYY-MM-DD.N` — today's date plus a run counter. N = 1 + the number of `runs.log` entries with today's date. No semver, ever.
 - **Base SHA**: `git rev-parse HEAD`. Every claim, patch, and line reference in this run is relative to this SHA.
 - **Mode**: `github` if `gh` is authenticated and the repo has a remote (`gh repo view` succeeds); otherwise `local`. In local mode, everything that would be a GitHub issue becomes a markdown file under `.claude/dream/runs/`, and PRs become local branches with the report noting "branch ready, no remote to push to". The pipeline is otherwise identical — never skip verification or the ledger because there's no remote.

@@ -30,7 +30,7 @@ claude --plugin-dir /path/to/dream
 | Command | What it does |
 |---|---|
 | `/dream init` | One-time setup: detects your ecosystems, interviews you (depth, merge style, scope, adapters), writes `.claude/dream/config.yml`, and records a dream-zero baseline. Required before any run. |
-| `/dream` | Default dream. Version scope: **minor + patch only** — never crosses a major version of anything. |
+| `/dream` | Default dream. Version scope comes from your config: `minor` (the default) never crosses a major version of anything; `major` if you gave standing consent at init. |
 | `/dream major` | Consent to major-version upgrades and the migrations they require. Research prioritizes official migration guides. |
 
 Run it on a schedule if you like (e.g. a weekly `claude -p "/dream"` cron or a
@@ -95,8 +95,8 @@ deterministic probes are skipped and all findings cap at medium confidence.
 ## Safety model
 
 - Nothing is merged by the plugin under any configuration.
-- Plain `/dream` never proposes major-version upgrades; `/dream major` is the
-  explicit consent switch.
+- Major-version upgrades happen only with explicit consent: `scope: major`
+  chosen during the init interview (standing), or `/dream major` (one run).
 - All researched text (changelogs, release notes, READMEs) is treated as
   untrusted data, never as instructions to the agent.
 - Minors go through the same verification ladder as majors — semver is a

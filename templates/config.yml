@@ -10,8 +10,10 @@ merge_style: umbrella
 # 2 = leads discovered during mining get one round of their own research.
 depth_cap: 2
 
-# Default version scope. minor = stay within the current major of every
-# dependency and the language toolchain. /dream major overrides per run.
+# Default version scope for bare /dream runs.
+#   minor — stay within the current major of every dependency and the
+#           language toolchain; /dream major grants one-run consent.
+#   major — standing consent: every dream proposes major upgrades too.
 scope: minor
 
 # Ecosystem adapters confirmed at init (files in .claude/dream/adapters/).

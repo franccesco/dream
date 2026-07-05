@@ -20,7 +20,7 @@ Ask the user before writing any config. Use the structured question tool if avai
    - `single` — one giant PR containing all accepted changes.
    - `per-finding` — one PR per finding, no umbrella issue linkage required.
    - `umbrella` — one umbrella issue + one PR per finding, all linked.
-3. **Default scope** (default **minor**): stay within current majors unless `/dream major` is invoked.
+3. **Default scope** (default **minor**): the scope bare `/dream` runs with. `minor` stays within current majors; `/dream major` grants one-run consent. Choosing `major` here is **standing consent** — every bare `/dream` will propose major-version upgrades and the migrations they imply. Make sure the user understands that before recording it.
 4. **Adapter confirmation**: list the detected ecosystems and which have adapters. Confirm the set to enable. Ecosystems without an adapter run in research-only mode (no deterministic probes, findings capped at medium confidence) — say so here, not later.
 
 Use the defaults silently for anything the user skips or has no opinion on.
