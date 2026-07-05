@@ -57,6 +57,7 @@ Three subcommands:
 - `/dream init` — one-time setup (section 4.1). Required before any run; bare `/dream` without init fails with "run /dream init first" (no lazy auto-init).
 - `/dream` — default run with sensible defaults. Version scope: **minor + patch only** (stay within current major of every dependency and the language toolchain), unless `scope: major` was explicitly consented at init.
 - `/dream major` — consent to major-version upgrades and the radical changes they require (migration guides, breaking-change refactors). Depth expansion prioritizes official migration guides in this mode.
+- `/dream [comment]` / `/dream major [comment]` — free text after the subcommand is a run comment: recorded in runs.log and the umbrella report, woven into research briefs to steer priority and depth. A comment never expands version scope or relaxes a guardrail.
 - Semver is a promise, not a guarantee: minors pass through the same verification ladder as majors.
 
 ### 4.1 `/dream init`

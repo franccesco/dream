@@ -32,6 +32,7 @@ claude --plugin-dir /path/to/dream
 | `/dream init` | One-time setup: detects your ecosystems, interviews you (depth, merge style, scope, adapters), writes `.claude/dream/config.yml`, and records a dream-zero baseline. Required before any run. |
 | `/dream` | Default dream. Version scope comes from your config: `minor` (the default) never crosses a major version of anything; `major` if you gave standing consent at init. |
 | `/dream major` | Consent to major-version upgrades and the migrations they require. Research prioritizes official migration guides. |
+| `/dream <comment>` | Any free text steers the run: `/dream focus on the crypto module`, `/dream major typer migration first`. Comments direct attention (what to research first and deepest) but never expand scope or relax the guardrails. |
 
 Run it on a schedule if you like (e.g. a weekly `claude -p "/dream"` cron or a
 scheduled Claude Code routine) — the pipeline is idempotent and dedupes against

@@ -16,14 +16,16 @@ Files bundled with this plugin are referenced as `${CLAUDE_PLUGIN_ROOT}/...`. If
 
 ## Dispatch
 
-Parse the arguments to decide the mode:
+Parse the arguments: the **first word** selects the mode; anything after it (or any text that isn't a subcommand) is the run's **comment** — free-text steering from the user.
 
-| Arguments | Mode | Behavior |
+| First word | Mode | Behavior |
 |---|---|---|
 | *(empty)* | **run** | Default dream. Version scope comes from `scope` in `config.yml`: `minor` (the default) stays within the current major of every dependency and of the language toolchain; `major` is standing consent recorded at init. |
 | `init` | **init** | One-time setup interview. Read `${CLAUDE_PLUGIN_ROOT}/skills/dream/references/init.md` and follow it. |
-| `major` | **run** | Same pipeline, but the user has consented to major-version upgrades and the radical changes they imply. Depth expansion prioritizes official migration guides. |
-| anything else | — | Print usage: `/dream`, `/dream init`, `/dream major` — and stop. |
+| `major` | **run** | Same pipeline, but the user has consented to major-version upgrades and the radical changes they imply. Depth expansion prioritizes official migration guides. Remaining words are the comment. |
+| anything else | **run** | The entire argument text is the comment for a default-scope run. |
+
+The comment steers **attention, not rules**: it can prioritize targets, name modules or concerns to look at first, or ask for extra depth somewhere — weave it into the research briefs and record it in the run report. It cannot expand version scope (only the `major` keyword or config consent does — if a comment asks for major work on a minor run, note that in the report and tell the user to run `/dream major`), and it cannot relax any iron rule.
 
 Arguments: $ARGUMENTS
 

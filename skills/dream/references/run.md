@@ -6,6 +6,7 @@ Execute the stages in order. Stages 4–5 (research, verification) are where sub
 
 - Read `.claude/dream/config.yml`, `baseline.yml`, `runs.log`, and the findings ledger README.
 - **Scope**: `major` if this run was invoked as `/dream major`; otherwise the `scope` value from `config.yml` (`minor` if absent). A config `scope: major` is standing consent given at init — honor it exactly like `/dream major`.
+- **Comment**: any free text the user passed after the subcommand. Record it verbatim in `runs.log` and the umbrella report, and use it to steer stage 5: comment-named targets, modules, or concerns get researched first and deepest (extra attention within the depth cap). A comment redirects attention; it never expands scope, skips verification, or relaxes an iron rule — if it asks for something out of scope, say so in the report instead of doing it.
 - **Dream ID**: `dream-YYYY-MM-DD.N` — today's date plus a run counter. N = 1 + the number of `runs.log` entries with today's date. No semver, ever.
 - **Base SHA**: `git rev-parse HEAD`. Every claim, patch, and line reference in this run is relative to this SHA.
 - **Mode**: `github` if `gh` is authenticated and the repo has a remote (`gh repo view` succeeds); otherwise `local`. In local mode, everything that would be a GitHub issue becomes a markdown file under `.claude/dream/runs/`, and PRs become local branches with the report noting "branch ready, no remote to push to". The pipeline is otherwise identical — never skip verification or the ledger because there's no remote.
@@ -16,7 +17,7 @@ If `merge_style: umbrella`: create the umbrella issue **before doing anything el
 
 For `single` and `per-finding` styles there is no umbrella issue; the final report goes to `.claude/dream/runs/<dream-id>.md` and is printed to the user.
 
-Append the run to `runs.log` now: `<dream-id> sha=<base-sha> scope=<scope> mode=<mode> umbrella=<ref-or-none>`.
+Append the run to `runs.log` now: `<dream-id> sha=<base-sha> scope=<scope> mode=<mode> umbrella=<ref-or-none> comment="<verbatim-or-empty>"`.
 
 ## 2. Inventory
 
@@ -62,6 +63,7 @@ Spawn one researcher per target with a delta (plus the practices sweep below). E
 - Scope (`minor`/`major`), depth cap (from config), and evidence-tier rules (the researcher's own instructions carry the full definitions).
 - In `major` mode: instruction to prioritize official migration guides.
 - A digest of prior ledger findings about this target — claims already `accepted`, `implemented`, or `rejected` (with `rejected_reason`) — so it doesn't re-litigate.
+- The run comment, verbatim, when it touches this target or unit — with a note that it steers priority and depth, nothing else.
 
 **Practices sweep (always runs, delta or not — structure-driven fan-out).** Alongside the per-delta researchers, sweep the project's own code, judged against current official documentation. Do not assign this to a single agent: one context window cannot read a real codebase honestly, and a sweep that samples is a sweep that misses the deep corners. Instead:
 
