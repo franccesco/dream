@@ -28,8 +28,12 @@ Trigger (/dream or scheduled)
     detect ecosystem; load adapter
   → Deterministic probes (adapter commands, zero LLM tokens):
       outdated deps · security advisories · language/runtime version gap
-  → Delta gate: targets with no delta are logged and skipped
+  → Delta gate: targets with no version delta are logged and skipped
+    (gates version research only)
   → Research fan-out: one subagent per target with a delta
+    + one always-on practices-sweep subagent per ecosystem
+      (idiom drift, deprecations in use, hand-rolled code with native
+       equivalents at pinned versions — code drifts even when pins are current)
   → Depth expansion (per finding, recursion depth cap = 2):
       mine changelogs release-by-release (filtered to symbols the project
       actually imports) → cross-reference the codebase (find code each
@@ -182,6 +186,8 @@ Applied per target, via adapter probes + research:
 
 Runtime/perf changelog notes count only if they affect a measured hot path; otherwise "no impact."
 
+Categories 1–5 and 8–9 are delta-gated (no version movement → no research). Categories 5–7 (deprecations in use, idiom drift, maintenance health) also run without any delta: maintenance health from deterministic registry metadata probes, deprecations + idiom drift via one always-on practices-sweep researcher per ecosystem.
+
 ## 12. Deliverables
 
 ```
@@ -196,7 +202,7 @@ Plus whatever workflow/prompt files the skill needs internally.
 ## 13. Acceptance criteria
 
 1. `/dream` on a Go repo with at least one outdated dependency produces: an umbrella issue, ≥1 ledger finding with valid front matter, and ≥1 PR or issue per the triage rules.
-2. A target with no delta produces a logged skip, no research agent, no finding.
+2. A target with no delta produces a logged skip and no version-delta research agent or staleness finding (the per-ecosystem practices sweep still runs).
 3. A finding citing only third-party sources never reaches high confidence.
 4. A finding whose affected path lacks test coverage ships a characterization test in its PR, or is downgraded to an issue.
 5. `/dream major` proposes major upgrades; plain `/dream` does so only under an explicitly consented `scope: major` config, and never under the default `minor` config.

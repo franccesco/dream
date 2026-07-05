@@ -49,6 +49,7 @@ For a run (after the init gate passes), read `${CLAUDE_PLUGIN_ROOT}/skills/dream
 
 ```
 Inventory → deterministic probes → delta gate → research fan-out
+  (per-delta targets + an always-on practices sweep per ecosystem)
   → verification (clean context) → ledger update → triage → umbrella report
 ```
 

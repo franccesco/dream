@@ -33,6 +33,8 @@ For each adapter, run its commands and capture raw output:
 - `probe_outdated` — pinned vs latest versions per dependency.
 - `probe_vulns` — security advisories (if the tool is missing, say so in the report and continue; offer the install command).
 - Language/runtime gap — compare the version from `lang_version_source` against `lang_latest_source`.
+- Maintenance health — registry/GitHub metadata for each direct dependency: archived flag, last-release date, deprecation notices, fork migrations. One API call per dep, no LLM.
+- Toolchain checks — run the adapter's `toolchain_checks` and note failures.
 
 These are **facts, not claims**: a version delta or a CVE hit skips confidence scoring entirely. Do not spawn research agents to establish what a probe already established.
 
@@ -45,7 +47,7 @@ Build the target list: every direct dependency + the language/runtime + toolchai
 - **No delta → logged skip.** Write one line per skipped target into the umbrella/report ("up to date at vX.Y.Z"). No research agent is spawned, no finding is created.
 - Delta → the target proceeds to research.
 
-This gate is what keeps dreams cheap on healthy projects. Respect it.
+This gate is what keeps dreams cheap on healthy projects. Respect it — but know its scope: it gates **version-delta research only**. The practices sweep in stage 5 runs regardless of deltas, because a project's own code drifts from current practice even while every pin is current. A dream that only ever looks where versions moved is a dependency bot, not a dream.
 
 ## 5. Research fan-out
 
@@ -56,6 +58,15 @@ Spawn one `dream:researcher` subagent per target with a delta. Run them in paral
 - Scope (`minor`/`major`), depth cap (from config), and evidence-tier rules (the researcher's own instructions carry the full definitions).
 - In `major` mode: instruction to prioritize official migration guides.
 - A digest of prior ledger findings about this target — claims already `accepted`, `implemented`, or `rejected` (with `rejected_reason`) — so it doesn't re-litigate.
+
+**Practices sweep (always runs, delta or not).** Alongside the per-delta researchers, spawn **one** `dream:researcher` per adapter ecosystem with the *practices brief* instead of a version target. Its subject is the project's own code, judged against current official documentation:
+
+- Idiom drift — how the project uses its imported libraries and the language versus how current official docs and examples do it.
+- Hand-rolled code with a native equivalent **already available at the pinned versions** — a workaround the standard library or an imported dependency has long since absorbed (the classic wins: things like `slices`/`maps`/`log/slog` in Go, pathlib over os.path in Python). Version-gap features belong to the language-target researcher, not here.
+- Deprecations in use — APIs the project calls that current official docs mark deprecated, even when no upgrade is pending.
+- Practice drift — project patterns that current official guidance (style guides, vet analyzers, official tooling output from the probes) recommends against.
+
+One sweep agent per ecosystem keeps the fan-out bounded; give it the import surface, the probe outputs (toolchain check failures are its leads), and the ledger digest, and let it choose the few highest-value files to actually read. Its findings are typed `idiom` or `practice`, carry the same evidence requirements (official docs only — idiom findings are judged solely against maintainer-owned sources), and pass through the same dedupe and verification as everything else.
 
 The researcher returns structured findings (or an explicit "no impact" with reason). **Dedupe before verification**: a finding whose claim matches a previously `rejected` ledger entry (same type, same target, same substantive claim) is dropped here and logged in the report as "previously rejected: <reason>". Re-proposing it would burn verification effort re-litigating a decision the user already made.
 
@@ -99,6 +110,7 @@ A finding whose affected path lacks test coverage ships the verifier's character
 Mechanics (github mode):
 
 - Branch: `dream/YYYY-MM-DD.N/finding-<id>`. `single` style: one branch `dream/YYYY-MM-DD.N/all` with all accepted changes, exactly one PR.
+- One PR per finding — atomic, reviewable, individually revertable. Batch two findings into one PR only when they are inseparable (a dep bump plus the idiom fixes it forces); note the pairing in both ledger entries.
 - PR body links the umbrella issue (if any) and the ledger finding file path. Label: `dream`.
 - Fill the finding's `pr:` / `issue:` front-matter fields with the created numbers — provenance must be queryable in both directions.
 
