@@ -20,3 +20,6 @@ verify: "go build ./... && go test ./..."
 
 # Toolchain currency checks.
 toolchain_checks: ["gofmt -l .", "go vet ./..."]
+
+# How the practices sweep decomposes this codebase into per-researcher units.
+sweep_units: "go list ./... (one unit per package)"

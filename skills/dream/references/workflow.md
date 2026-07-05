@@ -8,7 +8,12 @@ researcher physically cannot return an unparseable finding), and resumability
 (a run that dies mid-verification resumes without re-researching).
 
 Adapt the template below per run. Build the `briefs` array in the main loop
-first (stages 0–4 of run.md), then invoke the workflow with it as `args`.
+first (stages 0–4 of run.md): one brief per delta target **plus one brief per
+practices-sweep unit** from the structural decomposition. On a real codebase
+that can mean dozens of briefs — that is the intended shape, not a problem to
+optimize away; the workflow's concurrency queue absorbs any count, and
+completeness is the design goal. Then invoke the workflow with the array as
+`args`.
 Prompts must be **self-contained** — a workflow agent sees nothing of your
 conversation. Include in each brief prompt everything run.md says to pass
 (target, versions, probe output, import surface, scope, depth cap, ledger

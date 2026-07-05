@@ -17,3 +17,6 @@ verify: "bundle exec rspec"
 
 # Add what the project actually uses, e.g. ["bundle exec rubocop"]
 toolchain_checks: []
+
+# How the practices sweep decomposes this codebase into per-researcher units.
+sweep_units: "first-level directories under lib/ and app/; one unit per gem in a monorepo"

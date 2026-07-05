@@ -52,9 +52,11 @@ Design properties worth knowing:
 
 - **Delta gate + practices sweep.** Version research only runs for targets that
   actually moved — dreams are cheap on healthy projects. But dreaming is more
-  than dependencies: an always-on practices sweep (one agent per ecosystem)
-  reads your own code against current official docs — idiom drift, deprecated
-  APIs still in use, hand-rolled code the standard library has since absorbed.
+  than dependencies: an always-on practices sweep decomposes your codebase
+  along its structure (packages, modules) and gives **every unit its own
+  researcher**, reading your code in full against current official docs —
+  idiom drift, deprecated APIs still in use, hand-rolled code the standard
+  library has since absorbed. Completeness over cost, by design.
 - **Evidence tiers by ownership, not format.** Only maintainer/vendor-owned
   sources (official docs, release notes, changelogs, registry metadata, OSV.dev)
   count as evidence. Blogs and Stack Overflow may *locate* evidence, never *be* it.

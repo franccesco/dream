@@ -31,7 +31,10 @@ Trigger (/dream or scheduled)
   → Delta gate: targets with no version delta are logged and skipped
     (gates version research only)
   → Research fan-out: one subagent per target with a delta
-    + one always-on practices-sweep subagent per ecosystem
+    + an always-on, structure-driven practices sweep: the codebase is
+      decomposed along its natural structure (packages/modules/directories,
+      per the adapter's sweep_units hint) and every unit gets its own
+      researcher — no fan-out cap; completeness beats cost
       (idiom drift, deprecations in use, hand-rolled code with native
        equivalents at pinned versions — code drifts even when pins are current)
   → Depth expansion (per finding, recursion depth cap = 2):
@@ -186,7 +189,7 @@ Applied per target, via adapter probes + research:
 
 Runtime/perf changelog notes count only if they affect a measured hot path; otherwise "no impact."
 
-Categories 1–5 and 8–9 are delta-gated (no version movement → no research). Categories 5–7 (deprecations in use, idiom drift, maintenance health) also run without any delta: maintenance health from deterministic registry metadata probes, deprecations + idiom drift via one always-on practices-sweep researcher per ecosystem.
+Categories 1–5 and 8–9 are delta-gated (no version movement → no research). Categories 5–7 (deprecations in use, idiom drift, maintenance health) also run without any delta: maintenance health from deterministic registry metadata probes, deprecations + idiom drift via the always-on practices sweep — the codebase decomposed into structural units with one researcher per unit, uncapped.
 
 ## 12. Deliverables
 

@@ -20,3 +20,6 @@ verify: "npx tsc --noEmit --pretty false || true; npm test"
 
 # Add what the project actually uses, e.g. ["npx eslint .", "npx prettier --check ."]
 toolchain_checks: []
+
+# How the practices sweep decomposes this codebase into per-researcher units.
+sweep_units: "workspace packages from package.json workspaces; otherwise first-level directories under src/"

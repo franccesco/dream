@@ -63,14 +63,21 @@ Spawn one researcher per target with a delta (plus the practices sweep below). E
 - In `major` mode: instruction to prioritize official migration guides.
 - A digest of prior ledger findings about this target — claims already `accepted`, `implemented`, or `rejected` (with `rejected_reason`) — so it doesn't re-litigate.
 
-**Practices sweep (always runs, delta or not).** Alongside the per-delta researchers, spawn **one** `dream:researcher` per adapter ecosystem with the *practices brief* instead of a version target. Its subject is the project's own code, judged against current official documentation:
+**Practices sweep (always runs, delta or not — structure-driven fan-out).** Alongside the per-delta researchers, sweep the project's own code, judged against current official documentation. Do not assign this to a single agent: one context window cannot read a real codebase honestly, and a sweep that samples is a sweep that misses the deep corners. Instead:
+
+- **Decompose the codebase into sweep units along its natural structure**, using the adapter's `sweep_units` hint (Go: `go list ./...`; Python: packages and top-level modules; JS/TS: workspace packages or `src/` subtrees; Ruby: `lib/`/`app/` subtrees). A unit must be small enough to actually read — split anything beyond a few thousand lines by subdirectory, and let trivial fragments ride along with their parent.
+- **Spawn one `dream:researcher` per unit** with the practices brief. Completeness beats cost here by design — do not cap the fan-out; the workflow queue absorbs large unit counts. Each researcher gets its unit's file list, the slice of the import surface those files touch, toolchain-probe output for those files, the language pin, and the ledger digest.
+- **Account for coverage**: the umbrella report lists every sweep unit and its outcome (findings / clean / carried leads), so "the dream looked" is verifiable per-package, not asserted.
+- **Depth applies here too**: a lead that crosses unit boundaries (a hand-rolled util other packages also use, a repo-wide pattern) re-enters as a new finding and may trigger follow-up research in other units, within the config depth cap.
+
+What each unit researcher hunts:
 
 - Idiom drift — how the project uses its imported libraries and the language versus how current official docs and examples do it.
 - Hand-rolled code with a native equivalent **already available at the pinned versions** — a workaround the standard library or an imported dependency has long since absorbed (the classic wins: things like `slices`/`maps`/`log/slog` in Go, pathlib over os.path in Python). Version-gap features belong to the language-target researcher, not here.
 - Deprecations in use — APIs the project calls that current official docs mark deprecated, even when no upgrade is pending.
 - Practice drift — project patterns that current official guidance (style guides, vet analyzers, official tooling output from the probes) recommends against.
 
-One sweep agent per ecosystem keeps the fan-out bounded; give it the import surface, the probe outputs (toolchain check failures are its leads), and the ledger digest, and let it choose the few highest-value files to actually read. Its findings are typed `idiom` or `practice`, carry the same evidence requirements (official docs only — idiom findings are judged solely against maintainer-owned sources), and pass through the same dedupe and verification as everything else.
+Sweep findings are typed `idiom` or `practice`, carry the same evidence requirements (official docs only — idiom findings are judged solely against maintainer-owned sources), and pass through the same dedupe and verification as everything else.
 
 The researcher returns structured findings (or an explicit "no impact" with reason). **Dedupe before verification**: a finding whose claim matches a previously `rejected` ledger entry (same type, same target, same substantive claim) is dropped here and logged in the report as "previously rejected: <reason>". Re-proposing it would burn verification effort re-litigating a decision the user already made.
 
