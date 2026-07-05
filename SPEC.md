@@ -164,7 +164,7 @@ toolchain_checks: ["gofmt -l .", "go vet ./..."]
 ```
 
 - Ecosystem detected from manifest files at inventory.
-- v1 ships the **Go adapter only**; the schema must make Python (`pyproject.toml`/uv/pip-audit/pytest), JS/TS (`package.json`/npm outdated/npm audit/tsc+test), and Ruby (`Gemfile`/bundle outdated/bundler-audit/rspec) trivial follow-ups.
+- Shipped adapters: **Go**, **Python** (`pyproject.toml`/uv/pip-audit/pytest), **JS/TS** (`package.json`/npm outdated/npm audit/tsc+test), and **Ruby** (`Gemfile`/bundle outdated/bundler-audit/rspec). Init tailors copied adapter commands to the project's actual tooling.
 - No adapter for a detected ecosystem → research-only mode: skip deterministic probes, cap all findings at medium confidence.
 
 ## 11. Universal check categories

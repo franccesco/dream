@@ -83,11 +83,12 @@ Design properties worth knowing:
 
 ## Ecosystems
 
-v1 ships a **Go** adapter. The adapter schema is deliberately thin — probe
-commands, a verify command, version sources — so Python (`pyproject.toml` / uv /
-pip-audit / pytest), JS/TS (`package.json` / npm outdated / npm audit / tsc+test),
-and Ruby (`Gemfile` / bundle outdated / bundler-audit / rspec) are trivial
-follow-ups. PRs welcome: add a file to `adapters/`.
+Adapters ship for **Go**, **Python**, **JavaScript/TypeScript**, and **Ruby**.
+At init, the copied adapter is tailored to your project's actual tooling
+(uv vs pip vs poetry, pnpm vs npm vs bun, pytest vs unittest, …) and stays
+editable in `.claude/dream/adapters/`. The schema is deliberately thin — probe
+commands, a verify command, version sources — so new ecosystems are one small
+YAML file. PRs welcome: add a file to `adapters/`.
 
 A detected ecosystem without an adapter still works in **research-only mode**:
 deterministic probes are skipped and all findings cap at medium confidence.

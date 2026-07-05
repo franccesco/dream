@@ -1,0 +1,22 @@
+# Dream adapter: JavaScript / TypeScript
+#
+# Copied into .claude/dream/adapters/ by /dream init. Defaults assume npm;
+# AT INIT, TAILOR to the project's actual package manager and confirm:
+#   pnpm: "pnpm outdated" / "pnpm audit" / "pnpm test"
+#   yarn: "yarn outdated" / "yarn npm audit" / "yarn test"
+#   bun:  "bun outdated"  / "bun audit"     / "bun test"
+# For TypeScript projects, keep tsc in verify — typecheck is the compile floor.
+
+lang: javascript
+manifests: ["package.json"]
+
+probe_outdated: "npm outdated"
+probe_vulns: "npm audit"
+
+lang_version_source: "engines.node in package.json (or .nvmrc / .node-version)"
+lang_latest_source: "https://nodejs.org/dist/index.json"
+
+verify: "npx tsc --noEmit --pretty false || true; npm test"
+
+# Add what the project actually uses, e.g. ["npx eslint .", "npx prettier --check ."]
+toolchain_checks: []

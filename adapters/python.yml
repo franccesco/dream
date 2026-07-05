@@ -1,0 +1,24 @@
+# Dream adapter: Python
+#
+# Copied into .claude/dream/adapters/ by /dream init. The defaults below assume
+# a uv-managed project; AT INIT, TAILOR the commands to what the project
+# actually uses and confirm with the user:
+#   pip:    probe_outdated: "pip list --outdated"        verify: "python -m pytest"
+#   poetry: probe_outdated: "poetry show --outdated"     verify: "poetry run pytest"
+#   vulns without uv: "pip-audit" (pip install pip-audit)
+# If the project has no tests, leave verify as the compile floor:
+#   "python -m compileall -q ."  (the proof ladder then relies on characterization tests)
+
+lang: python
+manifests: ["pyproject.toml", "requirements.txt", "setup.py", "Pipfile"]
+
+probe_outdated: "uv pip list --outdated"
+probe_vulns: "uvx pip-audit"
+
+lang_version_source: "requires-python in pyproject.toml (or .python-version)"
+lang_latest_source: "https://www.python.org/downloads/ (latest stable release)"
+
+verify: "uv run pytest"
+
+# Add what the project actually uses, e.g. ["uv run ruff check .", "uv run mypy ."]
+toolchain_checks: []

@@ -7,8 +7,8 @@ Init exists so that the first real dream starts from consent and a baseline: the
 Build a picture of the project before asking the user anything, so the interview is informed rather than generic:
 
 - Scan for manifests (`go.mod`, `package.json`, `pyproject.toml`, `Gemfile`, `Cargo.toml`, …) and detect the ecosystems present.
-- For each detected ecosystem, check whether a bundled adapter exists in `${CLAUDE_PLUGIN_ROOT}/adapters/` (v1 ships `go.yml`).
-- Map the **import surface**: which external packages/modules the project imports, and which symbols from each. For Go: parse import blocks across `*.go` files, then grep for usage of each imported package's identifiers. This powers changelog filtering later — a dream only cares about upstream changes to symbols the project actually uses.
+- For each detected ecosystem, check whether a bundled adapter exists in `${CLAUDE_PLUGIN_ROOT}/adapters/` (shipped: `go`, `python`, `javascript`, `ruby`). While there, note the project's actual tooling — package manager (uv vs pip vs poetry, pnpm vs npm), test runner, linters — the adapter's commands must be tailored to it in step 3.
+- Map the **import surface**: which external packages/modules the project imports, and which symbols from each (Go: import blocks across `*.go` files; Python: `import`/`from` statements; JS/TS: `import`/`require`; Ruby: `require`/Gemfile — then grep for usage of each imported name). This powers changelog filtering later — a dream only cares about upstream changes to symbols the project actually uses.
 - Note whether the project is a git repository and whether `gh` is authenticated with a remote (`gh repo view`). This determines whether triage can open real issues/PRs (github mode) or must fall back to local artifacts (local mode — see run.md).
 
 ## 2. Interview
@@ -38,7 +38,7 @@ scope: minor            # default; /dream major overrides per run
 adapters: [go]          # confirmed at init
 ```
 
-- `.claude/dream/adapters/<lang>.yml` — copy each confirmed adapter from `${CLAUDE_PLUGIN_ROOT}/adapters/`. Copying (rather than referencing) lets the user tune probe commands per project.
+- `.claude/dream/adapters/<lang>.yml` — copy each confirmed adapter from `${CLAUDE_PLUGIN_ROOT}/adapters/`, then **tailor the copied commands to this project's real tooling** discovered in step 1 (e.g. a uv project gets `uv run pytest`, a pip project gets `python -m pytest`; the adapter's header comments list the variants). A probe or verify command that fails because it assumed the wrong tool wastes the whole run — get it right here, and mention what you tailored in the report.
 - `.claude/dream/findings/README.md` — copy from `${CLAUDE_PLUGIN_ROOT}/templates/findings-README.md`. This README **is** the ledger schema; runs and verifiers consult it.
 - `.claude/dream/imports.yml` — the import surface mapped in step 1, as `package → [symbols used]`.
 
@@ -69,3 +69,7 @@ Print a short setup report so wrong assumptions get corrected *before* the first
 - Count of direct dependencies baselined and the base SHA.
 
 Do not run any probes or research during init. Init sets the table; `/dream` eats.
+
+## Re-running init
+
+Re-running `/dream init` is safe and is the normal way to pick up newly shipped adapters or change settings: re-detect, re-interview (offer the *current* config values as the defaults, not the factory ones), regenerate `config.yml` and adapters, and refresh `baseline.yml` and `imports.yml`. Never touch `findings/` or `runs.log` — the ledger and run history survive re-init.

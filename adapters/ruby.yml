@@ -1,0 +1,19 @@
+# Dream adapter: Ruby
+#
+# Copied into .claude/dream/adapters/ by /dream init. AT INIT, TAILOR to the
+# project's test framework and confirm (rspec vs minitest: "bundle exec rake test").
+# bundler-audit: gem install bundler-audit (or add to the Gemfile's dev group).
+
+lang: ruby
+manifests: ["Gemfile"]
+
+probe_outdated: "bundle outdated --strict"
+probe_vulns: "bundle exec bundler-audit check --update || bundler-audit check --update"
+
+lang_version_source: "ruby directive in Gemfile (or .ruby-version)"
+lang_latest_source: "https://www.ruby-lang.org/en/downloads/releases/"
+
+verify: "bundle exec rspec"
+
+# Add what the project actually uses, e.g. ["bundle exec rubocop"]
+toolchain_checks: []
